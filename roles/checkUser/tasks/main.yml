@@ -6,9 +6,14 @@
   changed_when: false
   register: ssh_test
 
+- name: print out a debug message
+  debug:
+    msg: "ssh_test: {{ ssh_test }}"
+
 - name: Fall back to root user
   when: ssh_test.unreachable is defined
   connection: local
   set_fact:
     ansible_ssh_user: root
     ansible_port: 22
+
