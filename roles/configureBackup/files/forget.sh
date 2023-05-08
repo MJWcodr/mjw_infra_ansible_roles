@@ -6,9 +6,10 @@ source /etc/restic/restic.env
 
 # forget old snapshots
 restic \
-    -r $RESTIC_REPOSITORY \
+    -r "$RESTIC_REPOSITORY" \
     --password-command "echo $RESTIC_PASSWORD" \
     forget \
+    --log-file "$PATH_TO_LOG_FILE" \
     --keep-last 7 \
     --keep-daily 7 \
     --keep-weekly 4 \
@@ -17,6 +18,7 @@ restic \
 
 # prune the repository
 restic \
-    -r $RESTIC_REPOSITORY \
+    -r "$RESTIC_REPOSITORY" \
     --password-command "echo $RESTIC_PASSWORD" \
+    --log-file "$PATH_TO_LOG_FILE" \
     prune

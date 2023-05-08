@@ -8,5 +8,6 @@ source /etc/restic/restic.env
 restic -r $RESTIC_REPOSITORY \
     backup $PATH_TO_BACKUP \
     --files-from $PATH_TO_BACKUP_LIST  \
-    --exclude-file $PATH_TO_EXCLUDE_LIST \
-    --password-command "echo $RESTIC_PASSWORD"
+    --exclude-file "$PATH_TO_EXCLUDE_LIST" \
+    --password-command "echo $RESTIC_PASSWORD" \
+    --log-file "$PATH_TO_LOG_FILE"
