@@ -8,7 +8,6 @@ source /etc/restic/restic.env
 restic \
     -r $RESTIC_REPOSITORY \
     --password-command "echo $RESTIC_PASSWORD" \
-    --log-file "$PATH_TO_LOG_FILE" \
     stats
 
 # get snapshots

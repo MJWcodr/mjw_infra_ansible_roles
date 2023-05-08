@@ -12,6 +12,5 @@ if [ $? -ne 0 ]; then
     restic \
         -r $RESTIC_REPOSITORY \
         --password-command "echo $RESTIC_PASSWORD" \
-        --log-file "$PATH_TO_LOG_FILE" \
         init
 fi
