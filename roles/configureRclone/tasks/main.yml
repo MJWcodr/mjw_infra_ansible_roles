@@ -9,7 +9,7 @@
 
 - name: Copy rclone config file from local machine
   ansible.builtin.copy:
-    src: lookup('file', 'rclone.conf')
+    src: files/rclone.conf
     dest: /etc/rclone.conf
     owner: root
     group: root
