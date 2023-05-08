@@ -1,0 +1,14 @@
+---
+- name: Init
+  description: Initialize a new server
+  gather_facts: false
+  hosts: all
+  roles:
+    - { role: checkUser, tags: ["common", "check", "debug"] }
+    - { role: updateOS, tags: ["update"] }
+    - { role: common, tags: ["common"] }
+    - { role: ssh, tags: ["ssh"] }
+    - { role: configureRclone, tags: ["rclone"] }
+    - { role: configureBackup, tags: ["restic", "rclone"] }
+  ignore_errors: yes
+  become: yes
