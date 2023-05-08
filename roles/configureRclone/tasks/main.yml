@@ -1,0 +1,66 @@
+---
+- name: Install rclone and fuse
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - rclone
+    - fuse
+
+- name: Copy rclone config file
+  ansible.builtin.copy:
+    src: rclone.conf
+    dest: /etc/rclone.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Link rclone config to /root/.config/rclone/rclone.config
+  ansible.builtin.file:
+    src: /etc/rclone.conf
+    dest: /root/.config/rclone/rclone.conf
+    state: link
+
+- name: Create rclone mount directory
+  ansible.builtin.file:
+    path: /mnt/cryptdrive
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: copy systemd unit file
+  ansible.builtin.copy:
+    src: rclone.service
+    dest: /etc/systemd/system/rclone.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable rclone service
+  ansible.builtin.systemd:
+    name: rclone
+    enabled: yes
+
+- name: Restart rclone service
+  ansible.builtin.systemd:
+    name: rclone
+    state: restarted
+
+- name: Test if /mnt/cryptdrive is not empty
+  find:
+    paths: /mnt/cryptdrive
+    file_type: any
+  register: cryptdriveEmpty
+
+- fail:
+    msg: "/mnt/cryptdrive is empty"
+  when: cryptdriveEmpty.matched == 0
+
+- name: Test if backup rclone remote exists
+  shell: "rclone --config /etc/rclone.conf ls backup:"
+  register: backupRemoteExists
+
+- fail:
+    msg: "backup rclone remote does not exist"
+  when: backupRemoteExists.rc != 0

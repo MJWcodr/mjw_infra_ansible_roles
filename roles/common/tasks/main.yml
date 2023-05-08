@@ -1,0 +1,21 @@
+---
+- name: User | Create user accounts
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: /bin/bash
+    groups: wheel
+    update_password: on_create
+  ignore_errors: yes
+  loop:
+    - ansible
+    - matthias
+
+- name: User | Set authorized key for user
+  ansible.posix.authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', 'public_keys/{{ item }}.pub') }}"
+  ignore_errors: yes
+  loop:
+    - ansible
+    - matthias
