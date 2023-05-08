@@ -7,13 +7,21 @@
     - rclone
     - fuse
 
-- name: Copy rclone config file
+- name: Copy rclone config file from local machine
   ansible.builtin.copy:
-    src: rclone.conf
+    src: lookup('file', 'rclone.conf')
     dest: /etc/rclone.conf
     owner: root
     group: root
     mode: 0644
+
+- name: Create rclone config directory
+  ansible.builtin.file:
+    path: /root/.config/rclone
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Link rclone config to /root/.config/rclone/rclone.config
   ansible.builtin.file:
