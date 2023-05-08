@@ -66,5 +66,13 @@
     group: root
     mode: 0644
 
+- name: touch log file
+  ansible.builtin.file:
+    path: /var/log/restic.log
+    state: touch
+    owner: root
+    group: root
+    mode: 0644
+
 - name: run init script
   ansible.builtin.shell: /etc/restic/init.sh
