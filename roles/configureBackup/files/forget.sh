@@ -23,4 +23,8 @@ restic \
 
 # limit the length of the log file
 # remove all but the last 1000 lines
-tail -n 1000 "$PATH_TO_LOG_FILE" > "$PATH_TO_LOG_FILE.tmp" && mv "$PATH_TO_LOG_FILE.tmp" "$PATH_TO_LOG_FILE"
+tail -n 1000 "$DEBUG_LOG" > "$DEBUG_LOG.tmp" && mv "$DEBUG_LOG.tmp" "$DEBUG_LOG"
+
+# clear rclone log file
+RCLONE_LOG="/var/log/cryptdrive.log"
+tail -n 1000 "$RCLONE_LOG" > "$RCLONE_LOG.tmp" && mv "$RCLONE_LOG.tmp" "$RCLONE_LOG"

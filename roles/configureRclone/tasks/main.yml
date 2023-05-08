@@ -42,6 +42,14 @@
     group: root
     mode: 0755
 
+- name: create log file
+  ansible.builtin.file:
+    path: /var/log/cryptdrive.log
+    state: touch
+    owner: root
+    group: root
+    mode: 0644
+
 - name: copy systemd unit file
   ansible.builtin.copy:
     src: rclone.service
