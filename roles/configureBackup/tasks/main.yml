@@ -38,7 +38,7 @@
 
 - name: copy restic environment file to server
   ansible.builtin.copy:
-    src: restic.env
+    src: files/restic.env
     dest: /etc/restic/restic.env
     owner: root
     group: root
