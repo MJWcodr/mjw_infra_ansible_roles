@@ -22,3 +22,7 @@ restic \
     --password-command "echo $RESTIC_PASSWORD" \
     --log-file "$PATH_TO_LOG_FILE" \
     prune
+
+# limit the length of the log file
+# remove all but the last 1000 lines
+tail -n 1000 "$PATH_TO_LOG_FILE" > "$PATH_TO_LOG_FILE.tmp" && mv "$PATH_TO_LOG_FILE.tmp" "$PATH_TO_LOG_FILE"
