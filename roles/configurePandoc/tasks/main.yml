@@ -1,0 +1,61 @@
+---
+- name: check if package pandoc is installed, and install it if not
+  ansible.builtin.package:
+    name: pandoc
+    state: present
+
+- name: install latex
+  ansible.builtin.package:
+    name: texlive-full
+    state: present
+
+- name: add users to group pandoc
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: pandoc
+    append: yes
+  loop:
+    - root
+    - "{{ ansible_user }}"
+    - "{{ main_user }}"
+
+
+# 
+# copy templates
+# 
+
+- name: create a temporary directory for pandoc
+  ansible.builtin.file:
+    path: /tmp/pandoc
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: clone eisvogel template for pandoc
+  ansible.builtin.git:
+    repo: https://github.com/Wandmalfarbe/pandoc-latex-template.git
+    dest: /tmp/pandoc/pandoc-latex-template
+    clone: yes
+
+- name: copy eisvogel template to pandoc templates directory
+  ansible.builtin.copy:
+    src: /tmp/pandoc/pandoc-latex-template/eisvogel.tex
+    dest: /usr/share/pandoc/data/templates/eisvogel.latex
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: clone resume template for pandoc
+  ansible.builtin.git:
+    repo: https://github.com/john-bokma/resume-pandoc.git
+    dest: /tmp/pandoc/resume-pandoc
+    clone: yes
+
+- name: copy resume template to pandoc templates directory
+  ansible.builtin.copy:
+    src: /tmp/pandoc/resume-pandoc/templates/jb2resume.latex
+    dest: /usr/share/pandoc/data/templates/resume.latex
+    owner: root
+    group: root
+    mode: '0644'
