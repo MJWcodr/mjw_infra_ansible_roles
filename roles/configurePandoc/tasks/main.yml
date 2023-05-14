@@ -44,6 +44,14 @@
     group: root
     mode: '0755'
 
+- name: create pandoc templates directory
+  ansible.builtin.file:
+    path: /usr/share/pandoc/data/templates
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: clone eisvogel template for pandoc
   ansible.builtin.git:
     repo: https://github.com/Wandmalfarbe/pandoc-latex-template.git
