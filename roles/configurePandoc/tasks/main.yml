@@ -21,16 +21,10 @@
     state: present
   when: ansible_distribution == 'Ubuntu'
   
-- name: add users to group pandoc
-  ansible.builtin.user:
-    name: "{{ item }}"
-    groups: pandoc
-    append: yes
-  loop:
-    - wheel
-    - ansible
-    - "{{ main_user }}"
-  when: ansible_distribution == 'Fedora'
+- name: create group pandoc
+  ansible.builtin.group:
+    name: pandoc
+    state: present
 
 - name: add users to group pandoc
   ansible.builtin.user:
@@ -38,10 +32,9 @@
     groups: pandoc
     append: yes
   loop:
-    - sudo
+    - root
     - ansible
     - "{{ main_user }}"
-  when: ansible_distribution == 'Ubuntu'
 
 - name: create a temporary directory for pandoc
   ansible.builtin.file:
