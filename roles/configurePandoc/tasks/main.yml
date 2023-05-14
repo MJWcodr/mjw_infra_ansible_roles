@@ -11,7 +11,7 @@
 
 - name: install latex on fedora
   ansible.builtin.package:
-    name: texlive-scheme-full
+    name: texlive
     state: present
   when: ansible_distribution == 'Fedora'
 
