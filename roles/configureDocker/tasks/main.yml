@@ -1,0 +1,26 @@
+---
+- name: Install Docker
+  ansible.builtin.package:
+    name: docker-ce
+    state: present
+
+- name: Add users to group docker
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  loop:
+    - root
+    - ansible
+    - "{{ main_user }}"
+
+- name: Start Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Install Docker Compose
+  ansible.builtin.package:
+    name: docker-compose
+    state: present

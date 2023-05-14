@@ -1,5 +1,4 @@
 ---
-
 - name: check if git is installed, and install it if not
   ansible.builtin.package:
     name: git
@@ -10,11 +9,18 @@
     name: pandoc
     state: present
 
-- name: install latex
+- name: install latex on fedora
+  ansible.builtin.package:
+    name: texlive-scheme-full
+    state: present
+  when: ansible_distribution == 'Fedora'
+
+- name: install latex on ubuntu
   ansible.builtin.package:
     name: texlive-full
     state: present
-
+  when: ansible_distribution == 'Ubuntu'
+  
 - name: add users to group pandoc
   ansible.builtin.user:
     name: "{{ item }}"
@@ -42,8 +48,9 @@
 
 - name: copy eisvogel template to pandoc templates directory
   ansible.builtin.copy:
-    remote_src: /tmp/pandoc/pandoc-latex-template/eisvogel.tex
+    src: /tmp/pandoc/pandoc-latex-template/eisvogel.tex
     dest: /usr/share/pandoc/data/templates/eisvogel.latex
+    remote_src: yes
     owner: root
     group: root
     mode: '0644'
@@ -56,8 +63,9 @@
 
 - name: copy resume template to pandoc templates directory
   ansible.builtin.copy:
-    remote_src: /tmp/pandoc/resume-pandoc/templates/jb2resume.latex
+    src: /tmp/pandoc/resume-pandoc/resume.tex
     dest: /usr/share/pandoc/data/templates/resume.latex
+    remote_src: yes
     owner: root
     group: root
     mode: '0644'
