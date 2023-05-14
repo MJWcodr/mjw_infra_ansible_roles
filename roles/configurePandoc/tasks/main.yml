@@ -75,7 +75,7 @@
 
 - name: copy resume template to pandoc templates directory
   ansible.builtin.copy:
-    src: /tmp/pandoc/resume-pandoc/resume.tex
+    src: /tmp/pandoc/resume-pandoc/templates/jb2-modern.latex
     dest: /usr/share/pandoc/data/templates/resume.latex
     remote_src: yes
     owner: root
