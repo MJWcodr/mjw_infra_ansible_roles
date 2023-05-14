@@ -19,3 +19,13 @@
   loop:
     - ansible
     - matthias
+
+- name: install vim, git
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - vim
+    - git
+
+- name: test 
