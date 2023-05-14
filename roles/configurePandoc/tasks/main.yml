@@ -62,11 +62,8 @@
     group: root
     mode: '0644'
 
-post_tasks:
-  - name: remove temporary directory for pandoc
-    ansible.builtin.file:
-      path: /tmp/pandoc
-      state: absent
-      owner: root
-      group: root
-      mode: '0755'
+- name: delete temporary directory for pandoc
+  ansible.builtin.file:
+    path: /tmp/pandoc
+    state: absent
+    recurse: yes
