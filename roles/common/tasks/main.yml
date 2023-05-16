@@ -31,7 +31,6 @@
     name: "{{ main_user }}"
     password: "{{ main_user_password | password_hash('sha512') }}"
   when: main_user_password is defined
-  unregister: main_user_password
 
 - name: install vim, git
   ansible.builtin.package:
