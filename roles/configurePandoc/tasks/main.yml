@@ -100,15 +100,15 @@
     group: root
     mode: '0644'
 
-- name: convert test markdown file to pdf (eisvogel template)
-  tags: test
-  ansible.builtin.shell: pandoc /tmp/test.md -o /tmp/test-eisvogel.pdf --template eisvogel --pdf-engine=xelatex
-  register: pandoc_pdf
+# - name: convert test markdown file to pdf (eisvogel template)
+#   tags: test
+#   ansible.builtin.shell: pandoc /tmp/test.md -o /tmp/test-eisvogel.pdf --template eisvogel --pdf-engine=xelatex
+#   register: pandoc_pdf
 
-- name: convert test markdown file to pdf (resume template)
-  tags: test
-  ansible.builtin.shell: pandoc /tmp/test.md -o /tmp/test-resume.pdf --template resume --pdf-engine=xelatex
-  register: pandoc_pdf
+# - name: convert test markdown file to pdf (resume template)
+#   tags: test
+#   ansible.builtin.shell: pandoc /tmp/test.md -o /tmp/test-resume.pdf --template resume --pdf-engine=xelatex
+#   register: pandoc_pdf
 
 - name: copy test files to ansible controller
   tags: test
