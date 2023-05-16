@@ -24,7 +24,6 @@
   ansible.builtin.pause:
     prompt: "Enter password for {{ main_user }}: "
     echo: no
-    private: yes
   register: main_user_password
 
 - name: User | Set Password for main_user
@@ -32,6 +31,7 @@
     name: "{{ main_user }}"
     password: "{{ main_user_password | password_hash('sha512') }}"
   when: main_user_password is defined
+  unregister: main_user_password
 
 - name: install vim, git
   ansible.builtin.package:
