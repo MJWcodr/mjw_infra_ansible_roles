@@ -1,5 +1,6 @@
 ---
-- name: check if git is installed, and install it if not
+
+- name: if git is not installed install it
   ansible.builtin.package:
     name: git
     state: present
@@ -44,13 +45,12 @@
     group: root
     mode: '0755'
 
-- name: create pandoc templates directory
-  ansible.builtin.file:
-    path: /usr/share/pandoc/data/templates
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
+- name: find pandoc templates directory
+  ansible.builtin.find:
+    paths: /usr/share/pandoc
+    recurse: no
+    file_type: directory
+  register: pandoc_templates
 
 - name: clone eisvogel template for pandoc
   ansible.builtin.git:
@@ -58,10 +58,14 @@
     dest: /tmp/pandoc/pandoc-latex-template
     clone: yes
 
+- name: find pandoc templates directory
+  shell: find /usr/share/pandoc-*/data/templates | head -n 1
+  register: pandoc_templates
+
 - name: copy eisvogel template to pandoc templates directory
   ansible.builtin.copy:
     src: /tmp/pandoc/pandoc-latex-template/eisvogel.tex
-    dest: /usr/share/pandoc/data/templates/eisvogel.latex
+    dest: "{{ pandoc_templates.stdout }}/eisvogel.latex"
     remote_src: yes
     owner: root
     group: root
@@ -76,8 +80,53 @@
 - name: copy resume template to pandoc templates directory
   ansible.builtin.copy:
     src: /tmp/pandoc/resume-pandoc/templates/jb2-modern.latex
-    dest: /usr/share/pandoc/data/templates/resume.latex
+    dest: "{{ pandoc_templates.stdout }}/resume.latex"
     remote_src: yes
     owner: root
     group: root
     mode: '0644'
+
+# Tests
+
+- name: test pandoc installed
+  ansible.builtin.shell: pandoc --version
+  register: pandoc_version
+
+- name: copy test markdown file
+  ansible.builtin.copy:
+    src: test.md
+    dest: /tmp/test.md
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: convert test markdown file to pdf (eisvogel template)
+  tags: test
+  ansible.builtin.shell: pandoc /tmp/test.md -o /tmp/test-eisvogel.pdf --template eisvogel --pdf-engine=xelatex
+  register: pandoc_pdf
+
+- name: convert test markdown file to pdf (resume template)
+  tags: test
+  ansible.builtin.shell: pandoc /tmp/test.md -o /tmp/test-resume.pdf --template resume --pdf-engine=xelatex
+  register: pandoc_pdf
+
+- name: copy test files to ansible controller
+  tags: test
+  ansible.builtin.fetch:
+    src: /tmp/test.md
+    dest: /tmp/test.md
+    flat: yes
+    fail_on_missing: yes
+  loop:
+    - test-eisvogel.pdf
+    - test-resume.pdf
+
+- name: remove test files
+  tags: test
+  ansible.builtin.file:
+    path: /tmp/"{{ item }}"
+    state: absent
+  loop:
+    - test.md
+    - test-eisvogel.pdf
+    - test-resume.pdf

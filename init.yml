@@ -1,6 +1,5 @@
 ---
 - name: Init
-  description: Initialize a new server
   gather_facts: false
   hosts: all
   roles:

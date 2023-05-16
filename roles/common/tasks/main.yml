@@ -27,5 +27,3 @@
   loop:
     - vim
     - git
-
-- name: test 

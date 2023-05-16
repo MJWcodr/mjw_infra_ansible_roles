@@ -1,0 +1,13 @@
+---
+- name: check if mosh is installed
+  stat:
+    path: /usr/bin/mosh
+  register: mosh_installed
+
+- name: install mosh
+  ansible.builtin.package:
+    name: mosh
+    state: present
+  when: not mosh_installed.stat.exists
+
+- name: check if required firewall ports are open and open them if not
