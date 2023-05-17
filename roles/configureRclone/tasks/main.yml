@@ -1,11 +1,19 @@
 ---
-- name: Rclone | Install fuse on RHEL based systems
+- name: Rclone | Install fuse (RHEL/CentOS/Fedora)
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   loop:
     - fuse
   when: ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
+
+- name: Rclone | Install fuse (Debian/Ubuntu)
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - fuse3
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: Rclone | Install Rclone via shell
   ansible.builtin.shell:
