@@ -1,17 +1,11 @@
 ---
-- name: Rclone | Install fuse
+- name: Rclone | Install fuse on RHEL based systems
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   loop:
     - fuse
-
-- name: Install fuse3 on Ubuntu
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - fuse3
+  when: ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
 
 - name: Rclone | Install Rclone via shell
   ansible.builtin.shell:
@@ -82,7 +76,7 @@
 - name: Rclone | Test if service is running
   shell: systemctl is-active --quiet rclone
   register: rcloneServiceRunning
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Rclone | Test if /mnt/cryptdrive is not empty
   find:
