@@ -1,5 +1,8 @@
 ---
-- name: User | Create user accounts
+
+
+
+- name: User | Create user accounts (rhel based)
   ansible.builtin.user:
     name: "{{ item }}"
     shell: /bin/bash
@@ -9,6 +12,19 @@
   loop:
     - ansible
     - "{{ main_user }}"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat" or ansible_distribution == "Fedora"
+
+- name: User | Create user accounts (debian based)
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: /bin/bash
+    groups: sudo
+    update_password: on_create
+  ignore_errors: true
+  loop:
+    - ansible
+    - "{{ main_user }}"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: User | Set authorized key for user
   ansible.posix.authorized_key:
