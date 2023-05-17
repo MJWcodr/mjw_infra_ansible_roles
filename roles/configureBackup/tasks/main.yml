@@ -41,13 +41,13 @@
     mode: 0644
 
 - name: Backup | copy restic environment file to server
-  ansible.builtin.copy:
-    src: files/restic.env
+  template:
+    src: restic.env.j2
     dest: /etc/restic/restic.env
     owner: root
     group: root
     mode: 0644
-
+    
 - name: Backup | copy backup, forget, init and restore scripts to server
   ansible.builtin.copy:
     src: "{{ item }}"

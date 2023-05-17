@@ -10,4 +10,4 @@
     state: present
   when: not mosh_installed.stat.exists
 
-- name: check if required firewall ports are open and open them if not
+
