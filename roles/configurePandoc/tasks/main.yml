@@ -18,7 +18,7 @@
 
 - name: install latex on ubuntu
   ansible.builtin.package:
-    name: texlive-full
+    name: texlive
     state: present
   when: ansible_distribution == 'Ubuntu'
   

@@ -1,10 +1,14 @@
 ---
-- name: check if restic is installed and install it if not
+
+- name: Backup | check if restic is installed and install it if not
   ansible.builtin.package:
     name: restic
     state: present
+
+- name: Backup | update restic
+  ansible.builtin.shell: restic self-update
   
-- name: check if /etc/restic exists and create it if not
+- name: Backup | check if /etc/restic exists and create it if not
   ansible.builtin.file:
     path: /etc/restic
     state: directory
@@ -12,7 +16,7 @@
     group: root
     mode: 0755
 
-- name: check if /etc/cron.d exists and create it if not
+- name: Backup | check if /etc/cron.d exists and create it if not
   ansible.builtin.file:
     path: /etc/cron.d
     state: directory
@@ -20,7 +24,7 @@
     group: root
     mode: 0755
 
-- name: copy backup list to server
+- name: Backup | copy backup list to server
   ansible.builtin.copy:
     src: backup_list
     dest: /etc/restic/backup_list
@@ -28,7 +32,7 @@
     group: root
     mode: 0644
 
-- name: copy exclude list to server
+- name: Backup | copy exclude list to server
   ansible.builtin.copy:
     src: exclude_list
     dest: /etc/restic/exclude_list
@@ -36,7 +40,7 @@
     group: root
     mode: 0644
 
-- name: copy restic environment file to server
+- name: Backup | copy restic environment file to server
   ansible.builtin.copy:
     src: files/restic.env
     dest: /etc/restic/restic.env
@@ -44,7 +48,7 @@
     group: root
     mode: 0644
 
-- name: copy backup, forget, init and restore scripts to server
+- name: Backup | copy backup, forget, init and restore scripts to server
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: /etc/restic/{{ item }}
@@ -58,7 +62,7 @@
     - restore.sh
     - stats.sh
 
-- name: copy restic cronjobs to server
+- name: Backup | copy restic cronjobs to server
   ansible.builtin.copy:
     src: restic_cronjobs
     dest: /etc/cron.d/restic
@@ -66,7 +70,7 @@
     group: root
     mode: 0644
 
-- name: touch log file
+- name: Backup | touch log file
   ansible.builtin.file:
     path: /var/log/restic.log
     state: touch
@@ -74,5 +78,5 @@
     group: root
     mode: 0644
 
-- name: run init script
+- name: Backup | run init script
   ansible.builtin.shell: /etc/restic/init.sh
