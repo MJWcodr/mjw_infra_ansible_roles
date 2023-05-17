@@ -1,4 +1,16 @@
-- name: Perform full patching
+- name: UpdateOS | Update Package Cache (Debian/Ubuntu)
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: UpdateOS | Update Package Cache (CentOS)
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Fedora'
+
+- name: UpdateOS | Perform full patching
   package:
     name: '*'
     state: latest
