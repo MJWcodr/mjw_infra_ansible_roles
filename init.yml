@@ -3,9 +3,9 @@
   gather_facts: false
   hosts: all
   roles:
+    - { role: common, tags: ["common"] }
     - { role: checkUser, tags: ["common", "check", "debug"] }
     - { role: updateOS, tags: ["update"] }
-    - { role: common, tags: ["common"] }
     - { role: ssh, tags: ["ssh"] }
     - { role: configureRclone, tags: ["rclone"] }
     - { role: configureBackup, tags: ["restic", "rclone"] }

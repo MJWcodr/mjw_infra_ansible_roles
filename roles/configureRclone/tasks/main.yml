@@ -1,11 +1,15 @@
 ---
-- name: Install rclone and fuse
+- name: Install fuse
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   loop:
-    - rclone
     - fuse
+
+- name: Install Rclone via shell
+  ansible.builtin.shell:
+    cmd: curl https://rclone.org/install.sh | sudo bash
+    creates: /usr/bin/rclone
 
 - name: Copy rclone config file from local machine
   ansible.builtin.copy:

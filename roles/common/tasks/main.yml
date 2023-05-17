@@ -1,4 +1,7 @@
 ---
+- include_tasks: checkVariablesSet.yml
+  tags: install
+  
 - name: User | Create user accounts (rhel based)
   ansible.builtin.user:
     name: "{{ item }}"
