@@ -1,7 +1,4 @@
 ---
-
-
-
 - name: User | Create user accounts (rhel based)
   ansible.builtin.user:
     name: "{{ item }}"
