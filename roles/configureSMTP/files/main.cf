@@ -1,0 +1,8 @@
+# Postfix configuration File
+
+mydestination = $myhostname, mjwcodr.de
+mydomain = mjwcodr.de
+myorigin = $mydomain
+
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_path = smtpd

@@ -62,13 +62,23 @@
     - restore.sh
     - stats.sh
 
-- name: Backup | copy restic cronjobs to server
-  ansible.builtin.copy:
-    src: restic_cronjobs
-    dest: /etc/cron.d/restic
-    owner: root
-    group: root
-    mode: 0644
+- name: Backup | restic backup script to cron 
+  cron: 
+    name: "Create Backup"
+    minute: "10"
+    hour: "*"
+    job: "/etc/restic/backup.sh"
+    state: present
+    user: root
+
+- name: Backup | restic forget script to cron
+  cron:
+    name: "Forget Backup"
+    minute: "0"
+    hour: "*/12"
+    job: "/etc/restic/forget.sh"
+    user: root
+    state: present
 
 - name: Backup | touch log file
   ansible.builtin.file:

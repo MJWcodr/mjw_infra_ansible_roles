@@ -43,3 +43,15 @@
   loop:
     - vim
     - git
+
+- name: User | Install Anacron (rhel based)
+  ansible.builtin.package:
+    name: anacron
+    state: present
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat" or ansible_distribution == "Fedora"
+
+- name: User | Install Anacron (debian based)
+  ansible.builtin.package:
+    name: anacron
+    state: present
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

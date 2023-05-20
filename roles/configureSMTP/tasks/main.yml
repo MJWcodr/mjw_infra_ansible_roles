@@ -1,0 +1,19 @@
+---
+- name: SMTP | Install postfix
+  ansible.builtin.package:
+    name: postfix
+    state: present
+  
+- name: SMTP | Copy main.cf
+  ansible.builtin.copy:
+    src: main.cf
+    dest: /etc/postfix/main.cf
+    mode: 0644
+  
+- name: SMTP |
+
+- name: SMTP | Start postfix
+  ansible.builtin.service:
+    name: postfix
+    state: started
+    enabled: yes
