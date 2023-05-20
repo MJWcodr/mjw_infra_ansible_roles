@@ -1,7 +1,7 @@
 # Postfix configuration File
 
-mydestination = $myhostname, {{ smtp_hostname || hostname}}
-myhostname = {{ smtp_hostname || hostname }}
+mydestination = $myhostname, {{ smtp_hostname }}
+myhostname = {{ smtp_hostname }}
 mydomain = {{ domain }}
 myorigin = $mydomain
 
