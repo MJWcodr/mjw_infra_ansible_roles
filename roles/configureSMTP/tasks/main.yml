@@ -1,2 +1,13 @@
 ---
-- include: configurePostfix.yml
+
+- name: SMTP | create user group mail
+  ansible.builtin.group:
+    name: mail
+    state: present
+
+- name: SMTP | Add user main_user to group mail
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    groups: mail
+    append: yes
+    state: present
