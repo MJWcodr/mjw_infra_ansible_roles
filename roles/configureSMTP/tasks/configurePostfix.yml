@@ -1,0 +1,19 @@
+---
+- name: SMTP | Check if postfix is installed
+  ansible.builtin.stat:
+    path: /usr/sbin/postfix
+  register: postfix_cli
+
+- name: SMTP | Install postfix
+  ansible.builtin.package:
+    name: postfix
+    state: present
+  when: postfix_cli.stat.exists == False
+
+- name: SMTP | Copy main.cf
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644

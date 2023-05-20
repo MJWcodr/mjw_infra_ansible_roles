@@ -1,0 +1,12 @@
+# Postfix configuration File
+
+mydestination = $myhostname, {{ smtp_hostname || hostname}}
+myhostname = {{ smtp_hostname || hostname }}
+mydomain = {{ domain }}
+myorigin = $mydomain
+
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_path = smtpd
+
+inet_interfaces = all
+
