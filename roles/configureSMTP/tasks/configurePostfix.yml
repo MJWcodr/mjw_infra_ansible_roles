@@ -17,3 +17,18 @@
     owner: root
     group: root
     mode: 0644
+  
+- name: SMTP | Copy master.cf
+  template:
+    src: master.cf.j2
+    dest: /etc/postfix/master.cf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: SMTP | Open port 25
+  ansible.builtin.firewalld:
+    port: 25/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
