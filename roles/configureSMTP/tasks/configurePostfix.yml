@@ -93,4 +93,4 @@
 
 - name: Postfix | Copy Write message with public ip to console
   debug:
-    msg: "Postfix | Public IP: {{ ansible_default_ipv4.address }}"
+    msg: "Postfix | Public IP: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
