@@ -7,7 +7,6 @@ main_user: matthias
 hcloud_token: "token" # if hcloud is going to be used
 restic_password: "password" # for restic backups 
 
-
 hostname: # hostname of the server used for smtp and as a hostname for the server
 domain: # domain of the server used for smtp
 ansible_port: 42494 # port used for ssh

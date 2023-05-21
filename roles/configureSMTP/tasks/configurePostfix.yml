@@ -4,6 +4,31 @@
     path: /usr/sbin/postfix
   register: postfix_cli
 
+# set variable cert_path
+- name: SMTP | Set variable cert_path
+  set_fact:
+    cert_path: /etc/postfix/cert
+
+- name: SMTP | Set variable country
+  set_fact:
+    country: "DE"
+
+- name: SMTP | Set variable state
+  set_fact:
+    state: "Berlin"
+
+- name: SMTP | Set variable locality
+  set_fact:
+    locality: "Berlin"
+
+- name: SMTP | Set variable organization
+  set_fact:
+    organization: "Matthias Wünsch"
+  
+- name: SMTP | Set variable mail_fqdn
+  set_fact:
+    mail_fqdn: "cronmail.mjwcodr.de"
+
 - name: SMTP | Install postfix
   ansible.builtin.package:
     name: postfix
@@ -26,10 +51,25 @@
     group: root
     mode: 0644
 
-- name: SMTP | Open port 25
+- name: SMTP | Open port 587
   ansible.builtin.firewalld:
     port: 25/tcp
     permanent: yes
     state: enabled
     immediate: yes
 
+- name: SMTP | Create cert for postfix
+  ansible.builtin.shell: |
+    mkdir -p {{ cert_path }}
+    openssl req -new -x509 -days 3650 -nodes -out {{ cert_path }}/cert.pem -keyout {{ cert_path }}/key.pem -subj "/C={{ country }}/ST={{ state }}/L={{ locality }}/O={{ organization }}/CN={{ mail_fqdn }}"
+  when: postfix_cli.stat.exists == False
+
+- name: SMTP | Restart postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+  when: postfix_cli.stat.exists == False
+
+- name: SMTP | Copy Write message with public ip to console
+  debug:
+    msg: "SMTP | Public IP: {{ ansible_default_ipv4.address }}"
