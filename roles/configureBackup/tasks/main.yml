@@ -1,5 +1,4 @@
 ---
-
 - name: Backup | check if restic is installed and install it if not
   ansible.builtin.package:
     name: restic

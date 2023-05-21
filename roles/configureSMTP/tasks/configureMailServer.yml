@@ -35,22 +35,21 @@
     state: present
   when: postfix_cli.stat.exists == False
 
-- name: Postfix | Copy main.cf
+- name: Postfix | Copy main.cf and others
   template:
-    src: main.cf.j2
-    dest: /etc/postfix/main.cf
+    src: "{{ item }}.j2"
+    dest: /etc/postfix/{{ item }}
     owner: root
     group: root
     mode: 0644
+  loop: 
+    - main.cf
+    - master.cf
+    - mysql-virtual-alias-maps.cf
+    - mysql-virtual-email2email.cf
+    - mysql-virtual-mailbox-domains.cf
+    - mysql-virtual-mailbox-maps.cf
   
-- name: Postfix | Copy master.cf
-  template:
-    src: master.cf.j2
-    dest: /etc/postfix/master.cf
-    owner: root
-    group: root
-    mode: 0644
-
 - name: Postfix | Make sure python-firewall is installed for firewalld (RHEL)
   ansible.builtin.package:
     name: python-firewall
