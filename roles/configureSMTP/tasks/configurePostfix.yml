@@ -1,41 +1,41 @@
 ---
-- name: SMTP | Check if postfix is installed
+- name: Postfix | Check if postfix is installed
   ansible.builtin.stat:
     path: /usr/sbin/postfix
   register: postfix_cli
 
 # set variable cert_path
-- name: SMTP | Set variable cert_path
+- name: Postfix | Set variable cert_path
   set_fact:
     cert_path: /etc/postfix/cert
 
-- name: SMTP | Set variable country
+- name: Postfix | Set variable country
   set_fact:
     country: "DE"
 
-- name: SMTP | Set variable state
+- name: Postfix | Set variable state
   set_fact:
     state: "Berlin"
 
-- name: SMTP | Set variable locality
+- name: Postfix | Set variable locality
   set_fact:
     locality: "Berlin"
 
-- name: SMTP | Set variable organization
+- name: Postfix | Set variable organization
   set_fact:
     organization: "Matthias Wünsch"
   
-- name: SMTP | Set variable mail_fqdn
+- name: Postfix | Set variable mail_fqdn
   set_fact:
     mail_fqdn: "cronmail.mjwcodr.de"
 
-- name: SMTP | Install postfix
+- name: Postfix | Install postfix
   ansible.builtin.package:
     name: postfix
     state: present
   when: postfix_cli.stat.exists == False
 
-- name: SMTP | Copy main.cf
+- name: Postfix | Copy main.cf
   template:
     src: main.cf.j2
     dest: /etc/postfix/main.cf
@@ -43,7 +43,7 @@
     group: root
     mode: 0644
   
-- name: SMTP | Copy master.cf
+- name: Postfix | Copy master.cf
   template:
     src: master.cf.j2
     dest: /etc/postfix/master.cf
@@ -51,25 +51,46 @@
     group: root
     mode: 0644
 
-- name: SMTP | Open port 587
+- name: Postfix | Make sure python-firewall is installed for firewalld (RHEL)
+  ansible.builtin.package:
+    name: python-firewall
+    state: present
+  when: ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
+
+- name: Postfix | Check if firewalld exists
+  ansible.builtin.stat:
+    path: /usr/bin/firewalld
+  register: firewalld
+
+- name: Postfix | Install firewalld
+  ansible.builtin.package:
+    name: firewalld
+    state: present
+  when: firewalld.stat.exists == False
+
+- name: Postfix | Start firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Postfix | Open port 587
   ansible.builtin.firewalld:
-    port: 25/tcp
+    port: 587/tcp
     permanent: yes
     state: enabled
     immediate: yes
 
-- name: SMTP | Create cert for postfix
+- name: Postfix | Create cert for postfix
   ansible.builtin.shell: |
     mkdir -p {{ cert_path }}
     openssl req -new -x509 -days 3650 -nodes -out {{ cert_path }}/cert.pem -keyout {{ cert_path }}/key.pem -subj "/C={{ country }}/ST={{ state }}/L={{ locality }}/O={{ organization }}/CN={{ mail_fqdn }}"
-  when: postfix_cli.stat.exists == False
 
-- name: SMTP | Restart postfix
+- name: Postfix | Restart postfix
   ansible.builtin.service:
     name: postfix
     state: restarted
-  when: postfix_cli.stat.exists == False
 
-- name: SMTP | Copy Write message with public ip to console
+- name: Postfix | Copy Write message with public ip to console
   debug:
-    msg: "SMTP | Public IP: {{ ansible_default_ipv4.address }}"
+    msg: "Postfix | Public IP: {{ ansible_default_ipv4.address }}"
