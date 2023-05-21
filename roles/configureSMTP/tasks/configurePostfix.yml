@@ -125,3 +125,4 @@
     day: "*/2"
     job: "certbot renew --post-hook \"systemctl restart postfix\""
     state: present
+
