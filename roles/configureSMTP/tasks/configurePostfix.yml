@@ -94,3 +94,34 @@
 - name: Postfix | Copy Write message with public ip to console
   debug:
     msg: "Postfix | Public IP: {{ ansible_ssh_host }}"
+
+- name: Postfix | Add IP to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_ssh_host }} {{ smtp_hostname }} mail"
+    state: present
+    create: yes
+
+- name: Postfix | Check if certbot is installed
+  ansible.builtin.stat:
+    path: /usr/bin/certbot
+  register: certbot_cli
+
+- name: Postfix | Install certbot
+  ansible.builtin.package:
+    name: certbot
+    state: present
+  when: certbot_cli.stat.exists == False
+
+- name: Postfix | Create certbot
+  ansible.builtin.shell: |
+    certbot certonly --standalone --non-interactive --agree-tos --email {{ mail }} -d {{ smtp_hostname }
+
+- name: Postfix | Create certbot cronjob
+  cron:
+    name: "certbot"
+    minute: "0"
+    hour: "0"
+    day: "*/2"
+    job: "certbot renew --post-hook \"systemctl restart postfix\""
+    state: present
