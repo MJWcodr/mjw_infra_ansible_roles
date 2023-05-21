@@ -12,3 +12,4 @@
     append: yes
     state: present
 
+- include_tasks: configurePostfix.yml
