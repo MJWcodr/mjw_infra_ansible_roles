@@ -1,0 +1,120 @@
+---
+- name: MariaDB | check if MariaDB is installed
+  package:
+    name: MariaDB
+    state: present
+
+- name: MariaDB | Make Sure Service is enabled
+  service:
+    name: mariadb
+    state: enabled
+
+- name: MariaDB | Make sure Service started
+  service:
+    name: mariadb
+    stated: started
+
+- name: MariaDB | Create Database mailserver
+  mysql_db:
+    name: mailserver
+    state: present
+
+- name: MariaDB | Create User mailserver
+  mysql_user:
+    name: mailuser
+    password: "{{ mailuser_password }}"
+    priv: "mailserver.*:ALL"
+    state: present
+
+- name: MariaDB | Create Table virtual_domains
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      CREATE TABLE `virtual_domains` (
+      `id` int(11) NOT NULL auto_increment,
+      `name` varchar(50) NOT NULL,
+      PRIMARY KEY (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+- name: MariaDB | Create Table virtual_users
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      CREATE TABLE `virtual_users` (
+      `id` int(11) NOT NULL auto_increment,
+      `domain_id` int(11) NOT NULL,
+      `password` varchar(106) NOT NULL,
+      `email` varchar(100) NOT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `email` (`email`),
+      FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+- name: MariaDB | Create Table virtual_aliases
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      CREATE TABLE `virtual_aliases` (
+      `id` int(11) NOT NULL auto_increment,
+      `domain_id` int(11) NOT NULL,
+      `source` varchar(100) NOT NULL,
+      `destination` varchar(100) NOT NULL,
+      PRIMARY KEY (`id`),
+      FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  
+- name: MariaDB | Create Domain
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      INSERT INTO `mailserver`.`virtual_domains`
+      (`id`, `name`)
+      VALUES
+      ('1', '{{ smtp_hostname }}');
+
+- name: MariaDB | Verify Domain has been added
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      SELECT * FROM `mailserver`.`virtual_domains`;
+
+- name: MariaDB | generate hash of password
+  shell: "doveadm pw -s SHA512-CRYPT -p {{ virtual_mail_user_password }}"
+  register: hash
+
+- name: MariaDB | Create User virtual_mail_user
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      INSERT INTO mailserver.virtual_users
+      (domain_id, password , email)
+      VALUES
+      ('1', '1', '{{ hash.stdout }}', '{{ virtual_mail_user }}');
+  
+- name: MariaDB | Verify User has been added
+  mysql_db:
+    name: mailserver
+    state: present
+    login_user: mailuser
+    login_password: "{{ mailuser_password }}"
+    sql: >
+      SELECT * FROM `mailserver`.`virtual_users`;
+

@@ -35,6 +35,8 @@
     state: present
   when: postfix_cli.stat.exists == False
 
+- include_tasks: installMariaDB.yml
+
 - name: Postfix | Copy main.cf and others
   template:
     src: "{{ item }}.j2"
@@ -120,4 +122,60 @@
     day: "*/2"
     job: "certbot renew --post-hook \"systemctl restart postfix\""
     state: present
+  notify: restart postfix
 
+- name: Dovecot | Check if dovecot is installed
+  ansible.builtin.stat:
+    path: /usr/sbin/dovecot
+  register: dovecot_cli
+
+- name: Dovecot | Install dovecot
+  ansible.builtin.package:
+    name: dovecot
+    state: present
+  when: dovecot_cli.stat.exists == False
+
+- name: Dovecot | copy dovecot.conf
+  template:
+    src: dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conf
+
+- name: Dovecot | copy auth, main, ssl and other files
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/dovecot/conf.d/{{ item }}
+  loop:
+    - 10-auth.conf
+    - 10-mail.conf
+    - 10-master.conf
+    - auth-sql.conf.ext
+
+- name: Dovecot | Create vmail group with id 5000
+  ansible.builtin.group:
+    name: vmail
+    gid: 5000
+    state: present
+
+- name: Dovecot | Create user vmail and add them to vmail group
+  ansible.builtin.user:
+    name: vmail
+    uid: 5000
+    group: vmail
+    append: yes
+    state: present
+
+- name: Dovecot | Create directory /var/vmail
+  ansible.builtin.file:
+    path: /var/vmail
+    owner: vmail
+    group: vmail
+    mode: 0700
+    state: directory
+
+- name: Dovecot | Create directory /var/vmail/vhosts/{{ smtp_hostname }}
+  ansible.builtin.file:
+    path: /var/vmail/vhosts/{{ smtp_hostname }}
+    owner: vmail
+    group: vmail
+    mode: 0700
+    state: directory

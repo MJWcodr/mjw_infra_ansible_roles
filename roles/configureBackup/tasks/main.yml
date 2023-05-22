@@ -69,7 +69,7 @@
     job: "/etc/restic/backup.sh"
     state: present
     user: root
-
+    
 - name: Backup | restic forget script to cron
   cron:
     name: "Forget Backup"
