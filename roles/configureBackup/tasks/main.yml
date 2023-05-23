@@ -15,14 +15,6 @@
     group: root
     mode: 0755
 
-- name: Backup | check if /etc/cron.d exists and create it if not
-  ansible.builtin.file:
-    path: /etc/cron.d
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
 - name: Backup | copy backup list to server
   ansible.builtin.copy:
     src: backup_list
@@ -61,19 +53,23 @@
     - restore.sh
     - stats.sh
 
-- name: Backup | restic backup script to cron 
+- name: Backup | get random minute for cron
+  ansible.builtin.shell: /usr/bin/shuf -i 0-59 -n 1
+  register: random_minute
+
+- name: Backup | restic backup script to cron - run every hour at random minute
   cron: 
     name: "Create Backup"
-    minute: "10"
+    minute: "{{ random_minute.stdout }}"
     hour: "*"
     job: "/etc/restic/backup.sh"
     state: present
     user: root
     
-- name: Backup | restic forget script to cron
+- name: Backup | restic forget script to cron - run every 12 hours at random minute
   cron:
     name: "Forget Backup"
-    minute: "0"
+    minute: { random_minute.stdout }
     hour: "*/12"
     job: "/etc/restic/forget.sh"
     user: root

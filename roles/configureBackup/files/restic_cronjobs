@@ -1,5 +1,0 @@
-# Cronjob for restic backup
-*/30 * * * * /etc/restic/backup.sh >/dev/null 2>&1
-
-# Cronjob for restic forget/prune
-33 16 * * * /etc/restic/forget.sh >/dev/null 2>&1

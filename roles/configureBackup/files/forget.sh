@@ -4,6 +4,9 @@
 # Load Environment Variables
 source /etc/restic/restic.env
 
+# set path to log file
+DEBUG_LOG="/var/log/restic.log"
+
 # forget old snapshots
 restic \
     -r "$RESTIC_REPOSITORY" \
