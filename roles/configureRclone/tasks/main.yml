@@ -80,15 +80,11 @@
     group: root
     mode: 0644
 
-- name: Rclone | Enable rclone service
+- name: Rclone | Start and enable rclone service
   ansible.builtin.systemd:
     name: rclone
+    state: started
     enabled: yes
-
-- name: Rclone | Restart rclone service
-  ansible.builtin.systemd:
-    name: rclone
-    state: restarted
 
 - name: Rclone | Test if service is running
   shell: systemctl is-active --quiet rclone

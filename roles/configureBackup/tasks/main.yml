@@ -69,7 +69,7 @@
 - name: Backup | restic forget script to cron - run every 12 hours at random minute
   cron:
     name: "Forget Backup"
-    minute: { random_minute.stdout }
+    minute: "{{ random_minute.stdout }}"
     hour: "*/12"
     job: "/etc/restic/forget.sh"
     user: root
