@@ -1,33 +1,33 @@
 ---
 
-- name: if git is not installed install it
+- name: Pandoc | if git is not installed install it
   ansible.builtin.package:
     name: git
     state: present
 
-- name: check if package pandoc is installed, and install it if not
+- name: Pandoc | check if package pandoc is installed, and install it if not
   ansible.builtin.package:
     name: pandoc
     state: present
 
-- name: install latex on fedora
+- name: Pandoc | install latex on fedora
   ansible.builtin.package:
     name: texlive
     state: present
   when: ansible_distribution == 'Fedora'
 
-- name: install latex on ubuntu
+- name: Pandoc | install latex on ubuntu
   ansible.builtin.package:
     name: texlive
     state: present
   when: ansible_distribution == 'Ubuntu'
   
-- name: create group pandoc
+- name: Pandoc | create group pandoc
   ansible.builtin.group:
     name: pandoc
     state: present
 
-- name: add users to group pandoc
+- name: Pandoc | add users to group pandoc
   ansible.builtin.user:
     name: "{{ item }}"
     groups: pandoc
@@ -37,7 +37,7 @@
     - ansible
     - "{{ main_user }}"
 
-- name: create a temporary directory for pandoc
+- name: Pandoc | create a temporary directory for pandoc
   ansible.builtin.file:
     path: /tmp/pandoc
     state: directory
@@ -45,24 +45,24 @@
     group: root
     mode: '0755'
 
-- name: find pandoc templates directory
+- name: Pandoc | find pandoc templates directory
   ansible.builtin.find:
     paths: /usr/share/pandoc
     recurse: no
     file_type: directory
   register: pandoc_templates
 
-- name: clone eisvogel template for pandoc
+- name: Pandoc | clone eisvogel template for pandoc
   ansible.builtin.git:
     repo: https://github.com/Wandmalfarbe/pandoc-latex-template.git
     dest: /tmp/pandoc/pandoc-latex-template
     clone: yes
 
-- name: find pandoc templates directory
+- name: Pandoc | find pandoc templates directory
   shell: find /usr/share/pandoc-*/data/templates | head -n 1
   register: pandoc_templates
 
-- name: copy eisvogel template to pandoc templates directory
+- name: Pandoc | copy eisvogel template to pandoc templates directory
   ansible.builtin.copy:
     src: /tmp/pandoc/pandoc-latex-template/eisvogel.tex
     dest: "{{ pandoc_templates.stdout }}/eisvogel.latex"
@@ -71,13 +71,13 @@
     group: root
     mode: '0644'
 
-- name: clone resume template for pandoc
+- name: Pandoc | clone resume template for pandoc
   ansible.builtin.git:
     repo: https://github.com/john-bokma/resume-pandoc.git
     dest: /tmp/pandoc/resume-pandoc
     clone: yes
 
-- name: copy resume template to pandoc templates directory
+- name: Pandoc | copy resume template to pandoc templates directory
   ansible.builtin.copy:
     src: /tmp/pandoc/resume-pandoc/templates/jb2-modern.latex
     dest: "{{ pandoc_templates.stdout }}/resume.latex"
