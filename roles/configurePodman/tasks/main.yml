@@ -25,8 +25,8 @@
     state: started
     enabled: yes
 
-- name: Podman | Enable Podman-Network Service
+- name: Podman | Enable Podman-Remote Service
   ansible.builtin.service:
-    name: podman-network.service
+    name: podman-remote.service
     state: started
     enabled: yes
