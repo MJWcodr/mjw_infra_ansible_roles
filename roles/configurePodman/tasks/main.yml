@@ -25,12 +25,6 @@
     state: started
     enabled: yes
 
-- name: Podman | Enable Podman-Compose Service
-  ansible.builtin.service:
-    name: podman-compose.service
-    state: started
-    enabled: yes
-
 - name: Podman | Enable Podman-Network Service
   ansible.builtin.service:
     name: podman-network.service
