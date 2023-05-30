@@ -8,14 +8,13 @@
     group: root
     mode: '0755'
 
-- name: Photoprism | Copy Photoprism docker-compose file
+- name: Photoprism | Copy Photoprism docker-compose file
   template:
-    src: photoprism.yml.j2
+    src: docker-compose.yml.j2
     dest: /opt/photoprism/docker-compose.yml
     owner: root
     group: root
     mode: '0644'
-
 
 - name: Photoprism | Install Photoprism docker-compose file
   shell: |
