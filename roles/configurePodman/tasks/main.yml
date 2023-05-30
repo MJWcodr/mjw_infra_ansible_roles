@@ -1,50 +1,7 @@
 ---
-- name: Install Podman
-  package:
+- name: Podman | Install Podman
+  ansible.builtin.package:
     name: podman
     state: present
     update_cache: yes
-  tags: [podman]
-
-- name: Install Podman Compose
-  package:
-    name: podman-compose
-    state: present
-  tags: [podman]
-
-- name: Create Podman Group
-  group:
-    name: podman
-    state: present
-  tags: [podman]
-
-- name: Add User to Podman Group
-  user:
-    name: "{{ item }}"
-    groups: podman
-    append: yes
-  tags: [podman]
-  with_items:
-    - ansible
-    - "{{ main_user }}"
-  
-- name: Enable Podman Service
-  systemd:
-    name: podman.socket
-    enabled: yes
-    state: started
-  tags: [podman]
-
-- name: Enable Podman Network
-  systemd:
-    name: podman-network
-    enabled: yes
-    state: started
-  tags: [podman]
-
-- name: Enable Podman Remote Service
-  systemd:
-    name: podman-remote.socket
-    enabled: yes
-    state: started
-  tags: [podman]
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
