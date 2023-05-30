@@ -1,0 +1,24 @@
+---
+# This role is in accordance with the official Photoprism documentation for podman-compose
+- name: Photoprism | Create /opt/photoprism directory
+  ansible.builtin.file:
+    path: /opt/photoprism
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Photoprism | Copy Photoprism docker-compose file
+  template:
+    src: photoprism.yml.j2
+    dest: /opt/photoprism/docker-compose.yml
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Photoprism | Install Photoprism docker-compose file
+  shell: |
+    mkdir -p /opt/photoprism
+    cd /opt/photoprism
+    curl -sSf https://dl.photoprism.app/podman/install.sh | bash
