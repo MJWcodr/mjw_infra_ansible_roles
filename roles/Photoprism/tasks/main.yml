@@ -20,4 +20,4 @@
   shell: |
     mkdir -p /opt/photoprism
     cd /opt/photoprism
-    curl -sSf https://dl.photoprism.app/podman/install.sh | bash
+    curl -sSf https://dl.photoprism.app/podman/install.sh | bash >> 2&1&0 ./install.log
