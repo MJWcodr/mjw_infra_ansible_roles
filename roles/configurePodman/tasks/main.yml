@@ -18,7 +18,6 @@
     name: podman.socket
     state: started
     enabled: yes
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Fedora'
 
 - name: Podman | Enable Podman Service
   ansible.builtin.service:
