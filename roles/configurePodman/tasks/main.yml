@@ -5,3 +5,35 @@
     state: present
     update_cache: yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Fedora'
+
+- name: Podman | Install Podman-Compose
+  ansible.builtin.package:
+    name: podman-compose
+    state: present
+    update_cache: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Fedora'
+
+- name: Podman | Enable Podman Socket
+  ansible.builtin.service:
+    name: podman.socket
+    state: started
+    enabled: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Fedora'
+
+- name: Podman | Enable Podman Service
+  ansible.builtin.service:
+    name: podman.service
+    state: started
+    enabled: yes
+
+- name: Podman | Enable Podman-Compose Service
+  ansible.builtin.service:
+    name: podman-compose.service
+    state: started
+    enabled: yes
+
+- name: Podman | Enable Podman-Network Service
+  ansible.builtin.service:
+    name: podman-network.service
+    state: started
+    enabled: yes
