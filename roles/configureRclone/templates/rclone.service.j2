@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Restart=on-failure
 Type=simple
-ExecStart=/usr/bin/rclone --config /etc/rclone.conf mount --allow-other --vfs-cache-mode full --vfs-cache-max-size "{{ maxMemory }}" --log-file /var/log/cryptdrive.log cryptdrive: /mnt/cryptdrive
+ExecStart=/usr/bin/rclone --config /etc/rclone.conf mount --allow-other --vfs-cache-mode full --vfs-cache-max-size 2G --log-file /var/log/cryptdrive.log cryptdrive: /mnt/cryptdrive
 Restart=on-failure
 RestartSec=15
 TimeoutStartSec=10
