@@ -21,3 +21,5 @@
     mkdir -p /opt/photoprism
     cd /opt/photoprism
     curl -sSf https://dl.photoprism.app/podman/install.sh | bash >> /opt/photoprism/install.log
+    make up
+  
