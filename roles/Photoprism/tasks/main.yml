@@ -18,5 +18,5 @@
 
 - name: Photoprism | Install Photoprism docker-compose file
   shell: |
-    podman-compose -f /opt/photoprism/docker-compose.yml up -d
+    podman-compose -f /opt/photoprism/docker-compose.yml up -d >> /opt/photoprism/install.log
   
