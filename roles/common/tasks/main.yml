@@ -44,6 +44,19 @@
     - vim
     - git
 
+- name: create group for iptables
+  ansible.builtin.group:
+    name: iptables
+    state: present
+
+- name: chown /etc/iptables
+  ansible.builtin.file:
+    path: /etc/iptables
+    owner: root
+    group: iptables
+    mode: '0750'
+    state: directory
+
 - name: install python3
   ansible.builtin.package:
     name: python3
