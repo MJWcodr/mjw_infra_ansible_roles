@@ -40,13 +40,6 @@
     - /opt/photoprism/import
     - /opt/photoprism/storage
 
-- name: Photoprism | Add photoprism folders to SELinux
-  ansible.posix.seboolean:
-    name: httpd_read_user_content
-    persistent: yes
-    state: yes
-  when: ansible_os_family == 'RedHat'
-
 - name: Photoprism | Add user photoprism to group iptables
   ansible.builtin.user:
     name: photoprism
@@ -63,7 +56,7 @@
     - /opt/photoprism/storage
 
 - name: Photoprism | Install Photoprism docker-compose file
-  remote_user: photoprism
+  remote_user: root
   shell: |
     podman-compose -f /opt/photoprism/docker-compose.yml up -d >> /opt/photoprism/install.log
   
