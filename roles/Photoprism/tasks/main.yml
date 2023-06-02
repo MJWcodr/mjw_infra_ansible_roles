@@ -50,7 +50,7 @@
 
 - name: Photoprism | Add photoprism folders to Backup
   line_in_file: 
-    path: /etc/restic/backup.list
+    path: /etc/restic/backup_list
     line: "{{ item }}"
     state: present
   loop:
