@@ -39,9 +39,9 @@ services:
     depends_on:
       - mariadb
     restart: unless-stopped
-    security_opt:
-      - seccomp:unconfined
-      - apparmor:unconfined
+    # security_opt:
+    #   - seccomp:unconfined
+    #   - apparmor:unconfined
     user: 1000:1000
     privileged: true
     ports:
@@ -50,7 +50,7 @@ services:
       PHOTOPRISM_ADMIN_USER: "{{ photoprism_user }}"                 # admin login username
       PHOTOPRISM_ADMIN_PASSWORD: "{{ photoprism_user_password }}"           # initial admin password (8-72 characters)
       PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
-      PHOTOPRISM_SITE_URL: "http://photoprism.me:2342/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
+      PHOTOPRISM_SITE_URL: "http://localhost:2342/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
       PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
       PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # improves transfer speed and bandwidth utilization (none or gzip)
       PHOTOPRISM_LOG_LEVEL: "info"                   # log level: trace, debug, info, warning, error, fatal, or panic
@@ -118,3 +118,4 @@ services:
       MARIADB_USER: "photoprism"
       MARIADB_PASSWORD: "{{ photoprism_database_password }}"
       MARIADB_ROOT_PASSWORD: "{{ photoprism_database_admin_password}}"
+    

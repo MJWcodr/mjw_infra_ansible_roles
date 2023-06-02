@@ -1,50 +1,31 @@
 ---
 # This role is in accordance with the official Photoprism documentation for podman-compose
-- name: Photoprism | add group photoprism
-  group:
-    name: photoprism
-    state: present
-
-- name: Photoprism | add user photoprism
-  user:
-    name: photoprism
-    state: present
-    shell: /bin/bash
-    group: photoprism
-    createhome: no
-
 - name: Photoprism | Create /opt/photoprism directory
   ansible.builtin.file:
     path: /opt/photoprism
     state: directory
-    owner: photoprism
-    group: photoprism
+    owner: root
+    group: root
     mode: '0755'
 
 - name: Photoprism | Copy Photoprism docker-compose file
   template:
     src: docker-compose.yml.j2
     dest: /opt/photoprism/docker-compose.yml
-    owner: photoprism
-    group: photoprism
+    owner: root
+    group: root
     mode: '0754'
 
 - name: Photoprism | Make sure photoprism can access relevant files
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: photoprism
-    group: photoprism
+    owner: root
+    group: root
     mode: '0750'
   loop:
     - /opt/photoprism/import
     - /opt/photoprism/storage
-
-- name: Photoprism | Add user photoprism to group iptables
-  ansible.builtin.user:
-    name: photoprism
-    groups: iptables
-    append: yes
 
 - name: Photoprism | Add photoprism folders to Backup
   lineinfile: 
