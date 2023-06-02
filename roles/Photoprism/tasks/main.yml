@@ -49,7 +49,7 @@
     append: yes
 
 - name: Photoprism | Add photoprism folders to Backup
-  line_in_file: 
+  lineinfile: 
     path: /etc/restic/backup_list
     line: "{{ item }}"
     state: present
