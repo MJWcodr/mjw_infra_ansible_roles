@@ -1,5 +1,10 @@
 ---
 # This role is in accordance with the official Photoprism documentation for podman-compose
+- name: Photoprism | add group photoprism
+  group:
+    name: photoprism
+    state: present
+
 - name: Photoprism | add user photoprism
   user:
     name: photoprism
