@@ -55,9 +55,8 @@
     - /opt/photoprism/import
     - /opt/photoprism/storage
 
-- name: Photoprism | Install Photoprism docker-compose file
+- name: Photoprism | Install Photoprism
   remote_user: root
-  shell: |
-    podman-compose -f /opt/photoprism/docker-compose.yml up -d >> /opt/photoprism/install.log
-  
-
+  shell:  podman-compose -f /opt/photoprism/docker-compose.yml up -d >> /opt/photoprism/install.log
+  args:
+    chdir: /opt/photoprism
