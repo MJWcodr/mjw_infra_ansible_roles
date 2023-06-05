@@ -1,0 +1,51 @@
+# A list of all required and possible variables
+# optional variables are commented out
+
+# General Variables 
+# -----------------
+become: true # this playbook is designed to be run as root
+main_user: # the main user of the server, used in "common"
+# main_user_password_hashed: # the hashed password of the main user, used in "common"
+# main_user_password_hashed: ""
+
+hostname: # the actual hostname of the server, used in multiple roles
+
+# needed for the installation of packages and many other tasks
+# possible values: Debian, Ubuntu, CentOS, RedHat, Fedora
+ansible_distribution: 
+
+# 
+# Role Specific Variables
+# (only needed if you use the role)
+
+# Hetzner Cloud 
+# -----------------
+hcloud_token: 
+
+# configureBackup
+# -----------------
+# the password of the restic repository
+restic_password: 
+
+# configureSMTP
+# -----------------
+smtp_hostname: # the hostname mentioned in the smtp certificate/mx record
+domain: # domain of the server used for smtp
+mail: # email address of the admin
+mailuser_password:  # internal mailuser for postfix
+virtual_mail_user: mail@{{ domain }} # virtual mail user for the server
+virtual_mail_user_password: # password for the virtual mail user
+
+# Photoprism
+# -----------------
+photoprism_user: # the login username for the webinterface
+photoprism_user_password:  # the corresponding password
+photoprism_database_password: insecure # the password for the internal database
+photoprism_database_admin_password:  # the password for the database admin
+photoprism_originals_path: # the path to the originals folder
+photoprism_site_url: # the url of the photoprism server
+
+# Semaphore
+# -----------------
+
+semaphore_port:
