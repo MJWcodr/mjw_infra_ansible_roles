@@ -36,6 +36,14 @@
     - ansible
     - "{{ main_user }}"
 
+- name: User | Add hashed password for main_user if main_user_password_hashed exists
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    password: "{{ main_user_password_hashed }}"
+    update_password: on_create
+  when: main_user_password_hashed is defined
+
+
 - name: install vim, git
   ansible.builtin.package:
     name: "{{ item }}"
@@ -43,19 +51,6 @@
   loop:
     - vim
     - git
-
-- name: create group for iptables
-  ansible.builtin.group:
-    name: iptables
-    state: present
-
-- name: chown /etc/iptables
-  ansible.builtin.file:
-    path: /etc/iptables
-    owner: root
-    group: iptables
-    mode: '0750'
-    state: directory
 
 - name: install python3
   ansible.builtin.package:
