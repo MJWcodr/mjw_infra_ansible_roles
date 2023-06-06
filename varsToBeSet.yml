@@ -15,7 +15,8 @@ ansible_distribution:
 
 # 
 # Role Specific Variables
-# (only needed if you use the role)
+# (only needed if you actually use the role)
+# 
 
 # Hetzner Cloud 
 # -----------------
@@ -44,7 +45,7 @@ photoprism_database_admin_password:  # the password for the database admin
 photoprism_originals_path: # the path to the originals folder
 photoprism_site_url: # the url of the photoprism server
 
-# Semaphore
+# semaphore
 # -----------------
 
 semaphore_port:
