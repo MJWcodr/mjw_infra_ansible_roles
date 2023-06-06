@@ -7,7 +7,7 @@ become: true # this playbook is designed to be run as root
 main_user: # the main user of the server, used in "common"
 # main_user_password_hashed: # the hashed password of the main user, used in "common" (use mkpasswd --method=SHA-512)
 
-hostname: # the actual hostname of the server, used in multiple roles should correspond with A record in the DNS
+# hostname: # the actual hostname of the server, used in multiple roles should correspond with A record in the DNS
 
 # needed for the installation of packages and many other tasks
 # possible values: Debian, Ubuntu, CentOS, RedHat, Fedora
