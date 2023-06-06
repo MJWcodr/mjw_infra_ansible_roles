@@ -52,7 +52,6 @@
     - git
     - python3
 
-
 - name: install cronie (RHEL based)
   ansible.builtin.package:
     name: cronie
