@@ -2,14 +2,6 @@
 - include_tasks: checkVariablesSet.yml
   tags: install
 
-- name: Write the new instance host key to known hosts
-  connection: local
-  shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
-  become: false
-  run_once: true
-  args:
-    warn: false
-
 - name: User | Create user accounts (rhel based)
   ansible.builtin.user:
     name: "{{ item }}"
