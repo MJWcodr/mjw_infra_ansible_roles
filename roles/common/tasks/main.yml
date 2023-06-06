@@ -43,19 +43,15 @@
     update_password: on_create
   when: main_user_password_hashed is defined
 
-
-- name: install vim, git
+- name: install vim, git, python3
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   loop:
     - vim
     - git
+    - python3
 
-- name: install python3
-  ansible.builtin.package:
-    name: python3
-    state: present
 
 - name: install cronie (RHEL based)
   ansible.builtin.package:
