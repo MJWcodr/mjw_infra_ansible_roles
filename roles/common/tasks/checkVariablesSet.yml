@@ -5,4 +5,6 @@
       - main_user is defined
       - main_user is not none
       - ansible_distribution is defined and ansible_distribution in ['Debian', 'Ubuntu', 'CentOS', 'RedHat', 'Fedora']
+      - hostname is defined
+      - hostname is not none
       
