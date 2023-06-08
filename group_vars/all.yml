@@ -1,7 +1,7 @@
 # ansible_port: 42494
 ansible_ssh_user: ansible
 become: yes
-main_user: matthias
+main_user: mainuser
 
 # need to be set:
 hcloud_token: "token" # if hcloud is going to be used
