@@ -64,4 +64,4 @@
   ansible.builtin.replace:
     path: /opt/ppngx/start.sh
     regexp: 'POSTGRESQL_PASSWORD=paperlesschangeme'
-  replace: 'POSTGRESQL_PASSWORD={{ paperless_postgresql_password }}'
+    replace: 'POSTGRESQL_PASSWORD={{ paperless_postgresql_password }}'
