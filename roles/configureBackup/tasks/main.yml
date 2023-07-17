@@ -52,6 +52,7 @@
     - init.sh
     - restore.sh
     - stats.sh
+    - unlock.sh
 
 - name: Backup | get random minute for cron
   ansible.builtin.shell: /usr/bin/shuf -i 0-59 -n 1

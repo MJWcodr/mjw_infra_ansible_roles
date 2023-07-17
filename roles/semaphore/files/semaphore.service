@@ -1,0 +1,15 @@
+[Unit]
+Description=This unit will start after internet connection
+After=network.target
+Wants=network-online.target
+
+[Service]
+Restart=on-failure
+Type=simple
+ExecStart=/usr/bin/semaphore server --config /opt/semaphore/config.json
+Restart=on-failure
+RestartSec=15
+TimeoutStartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -49,3 +49,12 @@ photoprism_site_url: # the url of the photoprism server
 # -----------------
 
 semaphore_port:
+
+# paperless
+# -----------------
+paperless_timezone: # the timezone of the paperless server
+paperless_ocr_language: # the language for the ocr
+paperless_secret_key: # the secret key of the paperless server
+paperless_sftpgo_password: # the password for the sftpgo server
+paperless_sftpgo_admin_password: # the password for the sftpgo admin
+paperless_postgresql_password: # the password for the postgres database

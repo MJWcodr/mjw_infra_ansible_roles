@@ -1,0 +1,47 @@
+---
+- name: Semaphore | create folder for semaphore
+  file:
+    path: /opt/semaphore
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Semaphore | download semaphore
+  get_url:
+    url: wget https://github.com/ansible-semaphore/semaphore/releases/download/v2.8.75/semaphore_2.8.75_linux_amd64.rpm
+    directory: /opt/semaphore
+
+- name: Semaphore | Install Semaphore
+  yum:
+    name: /opt/semaphore/semaphore_2.8.75_linux_amd64.rpm
+    state: present
+
+- name: Semaphore | Copy Semaphore config file
+  template:
+    src: config.json.j2
+    dest: /opt/semaphore/config.json
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Semaphore | Copy systemd file
+  copy:
+    src: semaphore.service
+    dest: /etc/systemd/system/semaphore.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Semaphore | Start Semaphore
+  systemd:
+    name: semaphore
+    state: started
+    enabled: yes
+
+- name: Semaphore | Wait for Semaphore to start
+  wait_for:
+    port: 3000
+    delay: 5
+    timeout: 300
+  

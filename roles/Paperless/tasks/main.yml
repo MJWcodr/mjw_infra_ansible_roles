@@ -1,0 +1,67 @@
+---
+# This role sets up Paperless-ngx withing a podman container
+- name: Paperless-ngx | assert variables are set
+  ansible.builtin.assert:
+    that:
+      - paperless_timezone is defined
+      - paperless_ocr_language is defined
+      - paperless_secret_key is defined
+      - paperless_sftpgo_password is defined
+      - paperless_sftpgo_admin_password is defined
+      - paperless_postgresql_password is defined
+
+- name: Paperless-ngx | Make sure podman and jq are installed
+  ansible.builtin.package:
+    name:
+      - podman
+      - jq
+    state: present
+
+- name: Paperless-ngx | Create /opt/ppngx directory
+  ansible.builtin.file:
+    path: /opt/ppngx
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Paperless-ngx | clone ppngx repo
+  ansible.builtin.git:
+    repo: https://github.com/jdoss/ppngx.git
+    dest: /opt/ppngx
+
+- name: Paperless-ngx | edit ppngx config - timezone
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: 'PAPERLESS_TIME_ZONE=America/Chicago'
+    replace: 'PAPERLESS_TIME_ZONE={{ paperless_timezone }}'
+
+- name: Paperless-ngx | edit ppngx config - ocr language
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: 'PAPERLESS_OCR_LANG=eng'
+    replace: 'PAPERLESS_OCR_LANG={{ paperless_ocr_language }}'
+  
+- name: Paperless-ngx | edit ppngx config - secret key
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: 'PAPERLESS_SECRET_KEY=chamgemechamgemechamgemechamgemechamgemechamgemechamgemechamgeme'
+    replace: 'PAPERLESS_SECRET_KEY={{ paperless_secret_key }}'
+  
+- name: Paperless-ngx | edit ppngx config - sftpgo password
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: 'SFTPGO_PAPERLESS_PASSWORD=anothersupersecret'
+    replace: 'SFTPGO_PAPERLESS_PASSWORD={{ paperless_sftpgo_password }}'
+  
+- name: Paperless-ngx | edit ppngx config - sftpgo admin password
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: 'SFTPGO_ADMIN_PASSWORD=supersecret'
+    replace: 'SFTPGO_ADMIN_PASSWORD={{ paperless_sftpgo_admin_password }}'
+
+- name: Paperless-ngx | edit ppngx config - postgresql password
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: 'POSTGRESQL_PASSWORD=paperlesschangeme'
+    replace: 'POSTGRES_PASSWORD={{ paperless_postgresql_password }}'
