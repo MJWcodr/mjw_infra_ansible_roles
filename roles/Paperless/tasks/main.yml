@@ -65,3 +65,9 @@
     path: /opt/ppngx/start.sh
     regexp: 'POSTGRESQL_PASSWORD=paperlesschangeme'
     replace: 'POSTGRESQL_PASSWORD={{ paperless_postgresql_password }}'
+
+- name: Paperless-ngx | edit ppngx config - paperless consume queue
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \'
+    replace: '  -v paperless-consume:consume/:/usr/src/paperless/consume:U,z \'
