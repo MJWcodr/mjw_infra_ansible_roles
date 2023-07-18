@@ -1,2 +1,7 @@
 ---
-- name: configureNginx | Make sure nginx, certbot
+- name: configureNginx | Make sure nginx, certbot are installed
+  ansible.builtin.package:
+    name:
+      - nginx
+      - certbot
+    state: present
