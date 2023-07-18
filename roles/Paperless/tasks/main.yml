@@ -70,4 +70,4 @@
   ansible.builtin.replace:
     path: /opt/ppngx/start.sh
     regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \'
-    replace: '  -v paperless-consume:consume/:/usr/src/paperless/consume:U,z \'
+    replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/consume:U,z \'
