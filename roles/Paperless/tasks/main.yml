@@ -25,7 +25,28 @@
     group: root
     mode: '0755'
 
+- name: Paperless-ngx | create paperless user
+  ansible.builtin.user:
+    name: paperless
+    shell: /sbin/nologin
+    system: yes
+    createhome: no
+
+- name: Paperless-ngx | create paperless group
+  ansible.builtin.group:
+    name: paperless
+    system: yes
+
+- name: Paperless-ngx | create paperless directory
+  ansible.builtin.file:
+    path: /opt/ppngx
+    state: directory
+    owner: paperless
+    group: paperless
+    mode: '0755'
+
 - name: Paperless-ngx | clone ppngx repo
+  become_user: paperless
   ansible.builtin.git:
     repo: https://github.com/jdoss/ppngx.git
     dest: /opt/ppngx
@@ -71,3 +92,52 @@
     path: /opt/ppngx/start.sh
     regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \\'
     replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/consume:U,z \\'
+
+- name: Paperless-ngx | copy nginx config
+  template:
+    src: paperless.nginx.j2
+    dest: /etc/nginx/sites-available/paperless
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Paperless-ngx | enable nginx config
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/paperless
+    dest: /etc/nginx/sites-enabled/paperless
+    state: link
+
+- name: Paperless-ngx | test nginx config
+  ansible.builtin.command: nginx -t
+  register: nginx_test
+  failed_when: nginx_test.rc != 0
+
+- fail:
+    msg: "nginx config test failed"
+  when: nginx_test.rc != 0
+
+- name: Paperless-ngx | restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
+- name: Paperless-ngx | certbot nginx
+  ansible.builtin.command: certbot --nginx -d {{ paperless_domain }} --non-interactive --agree-tos --email {{ paperless_certbot_email }}
+
+- name: Paperless-ngx | start ppngx
+  become_user: paperless
+  ansible.builtin.command: /opt/ppngx/start.sh
+  async: 60
+  poll: 0
+  register: ppngx_start
+
+- name: Paperless-ngx | wait for ppngx to start
+  become_user: paperless
+  ansible.builtin.wait_for:
+    port: {{ paperless_port }}
+    host: localhost
+    delay: 5
+    timeout: 300
+  when: ppngx_start is changed
+
+

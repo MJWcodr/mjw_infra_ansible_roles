@@ -58,3 +58,6 @@ paperless_secret_key: # the secret key of the paperless server
 paperless_sftpgo_password: # the password for the sftpgo server
 paperless_sftpgo_admin_password: # the password for the sftpgo admin
 paperless_postgresql_password: # the password for the postgres database
+paperless_domain: # the domain of the paperless server
+paperless_port: # the port of the paperless server
+paperless_certbot_email: # the email address for the certbot
