@@ -69,5 +69,5 @@
 - name: Paperless-ngx | edit ppngx config - paperless consume queue
   ansible.builtin.replace:
     path: /opt/ppngx/start.sh
-    regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \'
-    replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/consume:U,z \'
+    regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \\'
+    replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/consume:U,z \\'
