@@ -122,7 +122,7 @@
     state: restarted
 
 - name: Paperless-ngx | certbot nginx
-  ansible.builtin.command: certbot --nginx -d {{ paperless_domain }} --non-interactive --agree-tos --email {{ paperless_certbot_email }}
+  ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
 
 - name: Paperless-ngx | start ppngx
   become_user: paperless
@@ -134,7 +134,7 @@
 - name: Paperless-ngx | wait for ppngx to start
   become_user: paperless
   ansible.builtin.wait_for:
-    port: {{ paperless_port }}
+    port: "{{ paperless_port }}"
     host: localhost
     delay: 5
     timeout: 300
