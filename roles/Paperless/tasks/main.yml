@@ -9,6 +9,9 @@
       - paperless_sftpgo_password is defined
       - paperless_sftpgo_admin_password is defined
       - paperless_postgresql_password is defined
+      - paperless_domain is defined
+      - paperless_port is defined
+      - paperless_certbot_email is defined
 
 - name: Paperless-ngx | Make sure podman and jq are installed
   ansible.builtin.package:
@@ -17,20 +20,20 @@
       - jq
     state: present
 
-- name: Paperless-ngx | Create /opt/ppngx directory
-  ansible.builtin.file:
-    path: /opt/ppngx
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
-
 - name: Paperless-ngx | create paperless user
   ansible.builtin.user:
     name: paperless
     shell: /sbin/nologin
     system: yes
     createhome: no
+
+- name: Paperless-ngx | Create /opt/ppngx directory
+  ansible.builtin.file:
+    path: /opt/ppngx
+    state: directory
+    owner: paperless
+    group: paperless
+    mode: '0755'
 
 - name: Paperless-ngx | create paperless group
   ansible.builtin.group:
@@ -46,10 +49,11 @@
     mode: '0755'
 
 - name: Paperless-ngx | clone ppngx repo
-  become_user: paperless
   ansible.builtin.git:
     repo: https://github.com/jdoss/ppngx.git
     dest: /opt/ppngx
+    owner: paperless
+    group: paperless
 
 - name: Paperless-ngx | edit ppngx config - timezone
   ansible.builtin.replace:
@@ -125,19 +129,15 @@
   ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
 
 - name: Paperless-ngx | start ppngx
-  become_user: paperless
-  ansible.builtin.command: /opt/ppngx/start.sh
+  ansible.builtin.command: sudo -u paperless /opt/ppngx/start.sh
   async: 60
   poll: 0
   register: ppngx_start
 
 - name: Paperless-ngx | wait for ppngx to start
-  become_user: paperless
   ansible.builtin.wait_for:
     port: "{{ paperless_port }}"
     host: localhost
     delay: 5
     timeout: 300
   when: ppngx_start is changed
-
-
