@@ -52,8 +52,14 @@
   ansible.builtin.git:
     repo: https://github.com/jdoss/ppngx.git
     dest: /opt/ppngx
+
+- name: Paperless-ngx | chown ppngx directory
+  ansible.builtin.file:
+    path: /opt/ppngx
+    state: directory
     owner: paperless
     group: paperless
+    mode: '0750'
 
 - name: Paperless-ngx | edit ppngx config - timezone
   ansible.builtin.replace:
