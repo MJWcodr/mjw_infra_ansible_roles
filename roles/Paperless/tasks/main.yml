@@ -114,7 +114,7 @@
 
 
 - name: Paperless-ngx | certbot nginx
-  ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
+  ansible.builtin.command: certbot certonly --standalone -d -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
 
 - name: Paperless-ngx | copy nginx config
   template:
