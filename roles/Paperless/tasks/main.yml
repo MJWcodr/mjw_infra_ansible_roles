@@ -140,7 +140,7 @@
     state: restarted
 
 - name: Paperless-ngx | start ppngx
-  ansible.builtin.command: sudo -u matthias /opt/ppngx/start.sh
+  ansible.builtin.command: /opt/ppngx/start.sh
   async: 60
   poll: 0
   register: ppngx_start
