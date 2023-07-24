@@ -29,6 +29,7 @@
     shell: /bin/bash
     system: yes
     createhome: yes
+    uid: 2000
 
 - name: Paperless-ngx | Create /opt/ppngx directory
   ansible.builtin.file:
