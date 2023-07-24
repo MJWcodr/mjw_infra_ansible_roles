@@ -168,3 +168,20 @@
 - fail:
     msg: "Paperless is not running"
   when: paperless_running.status != 200
+
+- name: Paperless-ngx | check if paperless superuser exists
+  ansible.builtin.command: 
+    chdir: /opt/ppngx
+    cmd: >
+      podman exec -it paperless-webserver python manage.py shell -c "from django.contrib.auth.models import User; print(User.objects.filter(username='{{ paperless_superuser }}').exists())"
+  register: paperless_superuser_exists
+
+- name: Paperless-ngx | create paperless superuser
+  ansible.builtin.command: 
+    chdir: /opt/ppngx
+    cmd: >
+      podman exec -it paperless-webserver python manage.py createsuperuser --username {{ paperless_superuser }} --email {{ paperless_superuser_email }} --noinput << EOF
+      {{ paperless_superuser_password }}
+      {{ paperless_superuser_password }}
+      EOF
+  when: paperless_superuser_exists.stdout == "False"
