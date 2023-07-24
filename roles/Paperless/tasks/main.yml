@@ -114,17 +114,11 @@
 
 - name: Paperless-ngx | copy nginx config
   template:
-    src: paperless.nginx.j2
-    dest: /etc/nginx/sites-available/paperless
-    owner: root
-    group: root
+    src: paperless.conf.j2
+    dest: /etc/nginx/conf.d/paperless.conf
+    owner: paperless
+    group: paperless
     mode: '0644'
-
-- name: Paperless-ngx | enable nginx config
-  ansible.builtin.file:
-    src: /etc/nginx/sites-available/paperless
-    dest: /etc/nginx/sites-enabled/paperless
-    state: link
 
 - name: Paperless-ngx | test nginx config
   ansible.builtin.command: nginx -t
@@ -156,3 +150,17 @@
     delay: 5
     timeout: 300
   when: ppngx_start is changed
+
+- name: Paperless-ngx | check if paperless is running
+  ansible.builtin.uri:
+    url: "http://localhost:{{ paperless_port }}"
+    return_content: yes
+  register: paperless_running
+  until: paperless_running.status == 200
+  retries: 10
+  delay: 5
+  when: ppngx_start is changed
+
+- fail:
+    msg: "Paperless is not running"
+  when: paperless_running.status != 200
