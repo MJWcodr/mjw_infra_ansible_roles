@@ -141,6 +141,7 @@
 
 - name: Paperless-ngx | start ppngx
   ansible.builtin.command: /opt/ppngx/start.sh
+  chdir: /opt/ppngx
   async: 60
   poll: 0
   register: ppngx_start
