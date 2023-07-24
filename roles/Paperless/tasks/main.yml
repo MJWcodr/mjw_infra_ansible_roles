@@ -120,6 +120,10 @@
     group: paperless
     mode: '0644'
 
+
+- name: Paperless-ngx | certbot nginx
+  ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
+
 - name: Paperless-ngx | test nginx config
   ansible.builtin.command: nginx -t
   register: nginx_test
@@ -133,9 +137,6 @@
   ansible.builtin.service:
     name: nginx
     state: restarted
-
-- name: Paperless-ngx | certbot nginx
-  ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
 
 - name: Paperless-ngx | start ppngx
   ansible.builtin.command: sudo -u paperless /opt/ppngx/start.sh
