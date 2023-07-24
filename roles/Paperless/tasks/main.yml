@@ -112,6 +112,10 @@
     regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \\'
     replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/consume:U,z \\'
 
+
+- name: Paperless-ngx | certbot nginx
+  ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
+
 - name: Paperless-ngx | copy nginx config
   template:
     src: paperless.conf.j2
@@ -119,10 +123,6 @@
     owner: paperless
     group: paperless
     mode: '0644'
-
-
-- name: Paperless-ngx | certbot nginx
-  ansible.builtin.command: certbot --nginx -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
 
 - name: Paperless-ngx | test nginx config
   ansible.builtin.command: nginx -t
