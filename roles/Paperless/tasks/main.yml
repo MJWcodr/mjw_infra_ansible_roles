@@ -26,9 +26,9 @@
 - name: Paperless-ngx | create paperless user
   ansible.builtin.user:
     name: paperless
-    shell: /sbin/nologin
+    shell: /bin/bash
     system: yes
-    createhome: no
+    createhome: yes
 
 - name: Paperless-ngx | Create /opt/ppngx directory
   ansible.builtin.file:
