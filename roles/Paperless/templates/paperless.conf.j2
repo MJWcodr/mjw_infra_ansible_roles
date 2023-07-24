@@ -9,7 +9,6 @@ server {
     ssl_trusted_certificate /etc/letsencrypt/live/{{ paperless_domain }}/chain.pem;
 
     # security
-    include                 nginxconfig.io/security.conf;
 
     # logging
     access_log              /var/log/nginx/access.log combined buffer=512k flush=1m;
