@@ -18,6 +18,9 @@
     name:
       - podman
       - jq
+      - nginx
+      - certbot
+      - python3-certbot-nginx
     state: present
 
 - name: Paperless-ngx | create paperless user
