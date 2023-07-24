@@ -48,10 +48,16 @@
     group: paperless
     mode: '0755'
 
+- name: Paperless-ngx | check if paperless repo exists
+  ansible.builtin.stat:
+    path: /opt/ppngx/.git
+  register: paperless_repo
+
 - name: Paperless-ngx | clone ppngx repo
   ansible.builtin.git:
     repo: https://github.com/jdoss/ppngx.git
     dest: /opt/ppngx
+  when: paperless_repo.stat.exists == False
 
 - name: Paperless-ngx | chown ppngx directory
   ansible.builtin.file:
