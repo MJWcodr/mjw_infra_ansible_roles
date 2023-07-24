@@ -13,7 +13,7 @@
       - paperless_port is defined
       - paperless_certbot_email is defined
 
-- name: Paperless-ngx | Make sure podman and jq are installed
+- name: Paperless-ngx | Make sure podman, jq, nginx, certbot, and python3-certbot-nginx are installed
   ansible.builtin.package:
     name:
       - podman
