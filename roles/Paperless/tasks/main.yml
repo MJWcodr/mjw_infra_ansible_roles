@@ -140,7 +140,7 @@
     state: restarted
 
 - name: Paperless-ngx | start ppngx
-  ansible.builtin.command: sudo -u paperless /opt/ppngx/start.sh
+  ansible.builtin.command: sudo -u matthias /opt/ppngx/start.sh
   async: 60
   poll: 0
   register: ppngx_start
@@ -150,7 +150,7 @@
     port: "{{ paperless_port }}"
     host: localhost
     delay: 5
-    timeout: 300
+    timeout: 200
   when: ppngx_start is changed
 
 - name: Paperless-ngx | check if paperless is running
