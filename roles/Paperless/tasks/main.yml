@@ -122,7 +122,7 @@
 - name: Paperless-ngx | add PAPERLESS_URL to ppngx config
   ansible.builtin.lineinfile:
     path: /opt/ppngx/start.sh
-    line: 'PAPERLESS_URL={{ paperless_domain }}'
+    line: 'PAPERLESS_URL=https://{{ paperless_domain }}'
     insertafter: PAPERLESS_VERSION=latest
 
 - name: Paperless-ngx | add PAPERLESS_URL to ppngx config
