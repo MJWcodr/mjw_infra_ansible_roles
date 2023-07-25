@@ -128,7 +128,7 @@
 - name: Paperless-ngx | add PAPERLESS_URL to ppngx config
   ansible.builtin.lineinfile:
     path: /opt/ppngx/start.sh
-    line: '  -e PAPERLESS_URL={{ paperless_domain }} \\'
+    line: '  -e PAPERLESS_URL=${PAPERLESS_URL} \\'
     insertafter: '  -e PAPERLESS_DBHOST=localhost \\'
 
 - name: Paperless-ngx | certbot nginx
