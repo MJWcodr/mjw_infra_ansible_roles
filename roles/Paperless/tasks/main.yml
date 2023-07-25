@@ -124,7 +124,6 @@
     path: /opt/ppngx/start.sh
     regexp: PAPERLESS_VERSION=latest
     insertafter: 'PAPERLESS_URL={{ paperless_domain }}'
-    state: present
 
 - name: Paperless-ngx | add PAPERLESS_URL to ppngx config
   ansible.builtin.lineinfile:
