@@ -111,8 +111,13 @@
   ansible.builtin.replace:
     path: /opt/ppngx/start.sh
     regexp: '  -v paperless-consume:/usr/src/paperless/consume:U,z \\'
-    replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/consume \\'
+    replace: '  -v /mnt/cryptdrive/consume:/usr/src/paperless/consume \\'
 
+- name: Paperless-ngx | edit ppngx config - paperless media
+  ansible.builtin.replace:
+    path: /opt/ppngx/start.sh
+    regexp: '  -v paperless-media:/usr/src/paperless/media:Z'
+    replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/media' 
 
 - name: Paperless-ngx | certbot nginx
   ansible.builtin.command: certbot certonly --standalone -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
