@@ -119,6 +119,19 @@
     regexp: '  -v paperless-media:/usr/src/paperless/media:Z'
     replace: '  -v /mnt/cryptdrive/documents:/usr/src/paperless/media' 
 
+- name: Paperless-ngx | add PAPERLESS_URL to ppngx config
+  ansible.builtin.lineinfile:
+    path: /opt/ppngx/start.sh
+    regexp: PAPERLESS_VERSION=latest
+    insertafter: 'PAPERLESS_URL={{ paperless_domain }}'
+    state: present
+
+- name: Paperless-ngx | add PAPERLESS_URL to ppngx config
+  ansible.builtin.lineinfile:
+    path: /opt/ppngx/start.sh
+    regexp: "  -e PAPERLESS_DBHOST=localhost \\"
+    insertafter: '  -e PAPERLESS_URL={{ paperless_domain }} \\'
+
 - name: Paperless-ngx | certbot nginx
   ansible.builtin.command: certbot certonly --standalone -d "{{ paperless_domain }}" --non-interactive --agree-tos --email "{{ paperless_certbot_email }}"
 
