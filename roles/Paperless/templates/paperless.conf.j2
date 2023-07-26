@@ -3,6 +3,9 @@ server {
     listen                  [::]:443 ssl http2;
     server_name             {{ paperless_domain }} ;
 
+    # Higher Client Body Size
+    client_max_body_size 1000M;
+
     # SSL
     ssl_certificate         /etc/letsencrypt/live/{{ paperless_domain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ paperless_domain }}/privkey.pem;
